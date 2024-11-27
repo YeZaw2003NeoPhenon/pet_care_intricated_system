@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,7 +22,12 @@ public class PetCareSecurityWebConfig{
 	private String[] public_user_filters = {"/api/v1/users/all-users","/api/v1/appointments/delete/{appId}","/api/v1/users/register"};
 	
 	private final PetCareService petCareService;
+
 	
+	public void globalConfigure(AuthenticationManagerBuilder builder) {
+		builder.authenticationProvider(authenticationProvider());
+		
+		}
 	@Bean
 	 DaoAuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
