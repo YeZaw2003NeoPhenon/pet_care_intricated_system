@@ -39,9 +39,10 @@ public class IUserService implements userService{
 		if(userRepository.existsByEmail(registerationRequest.getEmail())) {
 			throw new UserAlreadyExistsException("User Already Exists With" + registerationRequest.getEmail());
 		}
+		
 		registerationRequest.setPassword(passwordEncoder.encode(registerationRequest.getPassword()));
 		
-	 return userFactory.createUser(registerationRequest);
+		return userFactory.createUser(registerationRequest);
 		
 	}
 
@@ -93,6 +94,5 @@ public class IUserService implements userService{
 			 throw new UserNotFoundException("Failed to bail out user to delete!");
 		});
 	}
-	
 	
 }

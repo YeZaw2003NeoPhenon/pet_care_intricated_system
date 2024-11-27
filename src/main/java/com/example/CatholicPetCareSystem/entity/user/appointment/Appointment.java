@@ -11,6 +11,7 @@ import com.example.CatholicPetCareSystem.entity.user.User;
 import com.example.CatholicPetCareSystem.entity.user.appointment.status.AppointmenetStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -61,6 +62,7 @@ public class Appointment {
 		if( sender.getAppointments() == null ) {
 			sender.setAppointments(new ArrayList<>());
 		}
+		
 		sender.getAppointments().add(this);
 	}
 	

@@ -8,13 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-
-import com.example.CatholicPetCareSystem.security.custom.CustomFilter;
-import com.example.CatholicPetCareSystem.security.custom.RateLimitingInterceptor;
-
-import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -22,10 +16,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PetCareSecurityWebConfig{
 
+	private String[] public_appo_auth_filters = {"/api/v1/appointments/all-apps","/api/v1/appointments/select/{appId}","/api/v1/appointments/createApp"};
+	
+	private String[] public_user_filters = {"/api/v1/users/all-users","/api/v1/appointments/delete/{appId}","/api/v1/users/register"};
 	
 	private final PetCareService petCareService;
 	
-	private final RateLimitingInterceptor rateLimitingInterceptor;
 	@Bean
 	 DaoAuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -41,23 +37,23 @@ public class PetCareSecurityWebConfig{
 	
 	public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 		return	httpSecurity
-					.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-					.and()
+					.csrf().disable()
 					.authorizeHttpRequests()
-			       .requestMatchers("/admin/**").hasRole("ADMIN")
-					.requestMatchers("/vet/**").hasRole("VET")
-					.requestMatchers("/patient/**").hasRole("PATIENT")
+					.requestMatchers(public_appo_auth_filters).hasAnyRole("PATIENT","VET","ADMIN")
+					.requestMatchers(public_user_filters).hasAnyRole("ADMIN","PATIENT","VET")
 					.anyRequest().authenticated()
 					.and()
 					.httpBasic()
 					.and()
+					.logout()
+					.logoutUrl("/logout")
+					.clearAuthentication(true)
+					.invalidateHttpSession(true)
+					.and()
 					.sessionManagement()
 					.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 					.and()
-					.addFilterBefore(new CustomFilter(), UsernamePasswordAuthenticationFilter.class)
-					.addFilterBefore(rateLimitingInterceptor, UsernamePasswordAuthenticationFilter.class)
 					.build();
-		
 	}
 	
 }

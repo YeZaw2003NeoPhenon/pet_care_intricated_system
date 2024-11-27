@@ -102,8 +102,6 @@ public ResponseEntity<ApiResponse<List<AppointmentDto>>> getAllAppointments() {
 	} catch (AppointmentsNotFoundException e) {
 		 return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<List<AppointmentDto>>(HttpStatus.BAD_REQUEST, e.getMessage(), null));
 	}
-    
-
 }
 
 @RequestMapping( value = ApiPattern.getAppointmentById_api ,method = RequestMethod.GET)

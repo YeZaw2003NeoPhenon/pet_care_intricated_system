@@ -2,11 +2,9 @@ package com.example.CatholicPetCareSystem.response;
 
 
 
-import java.util.List;
 
 import org.springframework.http.HttpStatus;
 
-import com.example.CatholicPetCareSystem.dto.UserDto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,9 +17,7 @@ public class ApiResponse<T>{
 	private String message;
 	
 	private T data;
-	
-	private List<UserDto> users;
-	
+		
     public ApiResponse(HttpStatus status, String message, T data) {
         this.status = status;
         this.message = message;

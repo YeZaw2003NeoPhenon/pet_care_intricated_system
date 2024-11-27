@@ -33,7 +33,7 @@ public class UserController {
 	private final EntityConverter<User , UserDto> entityConverter;
 	
 	
-	@RequestMapping( value = ApiPattern.registerApi ,method = RequestMethod.POST)
+		@RequestMapping( value = ApiPattern.registerApi ,method = RequestMethod.POST)
 	public ResponseEntity<ApiResponse<UserDto>> registerUser( @RequestBody RegisterationRequest request) {
 	 
 	 try {

@@ -2,6 +2,7 @@ package com.example.CatholicPetCareSystem.security;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,9 +19,6 @@ import lombok.Setter;
 @Setter
 public class PetCareSecurity implements UserDetails{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private String username;
@@ -30,11 +28,12 @@ public class PetCareSecurity implements UserDetails{
 	public PetCareSecurity(User user) {
 		this.username =	user.getEmail();
 		this.password = user.getPassword();
-		this.authorities = getImpeccableAuthRoles(user.getUserType());
+		this.authorities = Collections.unmodifiableList(getImpeccableAuthRoles(user.getUserType()));
+		System.out.println(user.getUserType() + "is trying to get over!");
 	}
 
 	private List<GrantedAuthority> getImpeccableAuthRoles(String userType) {
-		return Arrays.stream(userType.toUpperCase().split(","))
+		return Arrays.stream(userType.toUpperCase().split(" "))
 		.map(role -> role.startsWith("ROLE_") ? role : "ROLE_" + role)
 		.map(SimpleGrantedAuthority::new)
 		.collect(Collectors.toList());
